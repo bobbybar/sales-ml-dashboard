@@ -64,6 +64,28 @@ df['day_of_week Code'] = df['day_of_week Code'].cat.codes # Convert day_of_week 
 df.describe()
 df.head()
 
+# Modeling
+daily_sales = df.groupby('Date')['Total Revenue'].sum().reset_index() # Group by Date and sum sales
+daily_sales = daily_sales.sort_values('Date') # Sort by Date (ie. groups by day of the week)
+
+daily_sales['Date'] = pd.to_datetime(daily_sales['Date'])
+daily_sales.set_index('Date', inplace=True)
+
+daily_sales = daily_sales.asfreq('D').fillna(0) # Fill missing dates with 0 sales
+
+
+plt.figure(figsize=(12, 6))
+plt.plot(daily_sales.index, daily_sales['Total Revenue'], marker='o', linestyle='-')
+plt.title('Daily Sales Over Time')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show() 
+
+import pmdarima as pm
+
+
+
 
 
 
